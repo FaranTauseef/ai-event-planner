@@ -2,7 +2,7 @@ import pool  from "../database/database_connection.js";
 
 export const getEvents = async (req,res) => {
   try {
-    const result = await pool.query("SELECT * FROM events ORDER BY id DESC");
+    const result = await pool.query("SELECT * FROM events WHERE owner_id = $1 ORDER BY id DESC", [req.user.id]);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -12,8 +12,8 @@ export const getEvents = async (req,res) => {
 export const getEventById = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM events WHERE id = $1",
-      [req.params.id]
+      "SELECT * FROM events WHERE id = $1 AND owner_id = $2",
+      [req.params.id, req.user.id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -23,8 +23,8 @@ export const getEventById = async (req, res) => {
 
 export const createEvent = async (req, res) => {
   try {
-    const { title, description, location, start_date, end_date, owner_id } = req.body;
-
+    const { title, description, location, start_date, end_date } = req.body;
+    const owner_id = req.user.id;
     const result = await pool.query(
       `INSERT INTO events (title, description, location, start_date, end_date, owner_id)
        VALUES ($1,$2,$3,$4,$5,$6)

@@ -2,7 +2,7 @@ import pool  from "../database/database_connection.js";
 
 export const getTasks = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM tasks ORDER BY id DESC");
+    const result = await pool.query("SELECT * FROM tasks WHERE user_id = $1 ORDER BY id DESC", [req.user.id]);
     res.json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -12,8 +12,8 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM tasks WHERE id = $1",
-      [req.params.id]
+      "SELECT * FROM tasks WHERE id = $1 AND user_id = $2",
+      [req.params.id, req.user.id]
     );
     res.json(result.rows[0]);
   } catch (err) {
@@ -23,7 +23,8 @@ export const getTaskById = async (req, res) => {
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, priority, due_date, event_id, user_id } = req.body;
+    const { title, description, priority, due_date, event_id } = req.body;
+    const user_id = req.user.id;
 
     const result = await pool.query(
       `INSERT INTO tasks (title, description, priority, due_date, event_id, user_id)
