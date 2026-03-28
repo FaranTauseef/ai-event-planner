@@ -7,6 +7,7 @@ import passport from "passport";
 
 import taskRoutes from "../routes/tasks_routes.js";
 import eventRoutes from "../routes/events_routes.js";
+import eventGuestRoutes from "../routes/event_guests_routes.js";
 import userRoutes from "../routes/users_routes.js";
 import vendorRoutes from "../routes/vendors_routes.js";
 import scheduleRoutes from "../routes/schedules_routes.js";
@@ -35,10 +36,11 @@ app.use(passport.session());
 
 app.use("/api/tasks", taskRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/guests", eventGuestRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/vendors", vendorRoutes);
 app.use("/api/schedules", scheduleRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 
 app.get("/", (req, res) => {

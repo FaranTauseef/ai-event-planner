@@ -16,7 +16,6 @@ const router = express.Router();
 
 
 router.get("/", verifyToken,permit("admin","collaborator"),getSchedules);
-router.get("/event",verifyToken,permit("admin","collaborator"), getScheduleByEventId); 
 router.get("/:id",verifyToken,permit("admin","collaborator"), getScheduleById);
 router.post("/", verifyToken,permit("admin"),createSchedule);
 router.put("/:id", verifyToken,permit("admin"),updateSchedule);

@@ -117,14 +117,10 @@ export const authSuccess = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-
-    res.json({
-      message: "OAuth login successful",
-      token,
-      user
-    });
+    res.redirect(`http://localhost:5173/login?token=${token}`);
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
